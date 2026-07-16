@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Summary {
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,6 +23,12 @@ public class Summary {
 
     @Column(nullable = false)
     private UUID userId;
+
+    @Column(nullable = false)
+    private LocalDate start;
+
+    @Column(nullable = false)
+    private LocalDate end;
 
     @Column(nullable = false)
     private BigDecimal income;
@@ -37,13 +43,9 @@ public class Summary {
     private BigDecimal savingRate;
 
     @Column(nullable = false)
-    private boolean enabled;
+    @Enumerated(EnumType.STRING)
+    private CategoryType largestExpense;
 
     @Column(nullable = false)
-    private LocalDate creatOn;
-
-    @Column(nullable = false)
-    private LocalDate updateOn;
-
-
+    private LocalDate generatedAt;
 }
