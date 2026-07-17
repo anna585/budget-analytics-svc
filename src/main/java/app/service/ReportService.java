@@ -1,9 +1,9 @@
 package app.service;
 
-import app.model.SummaryMapper.ReportMapper;
+import app.model.mapper.ReportMapper;
 import app.model.entities.CategoryType;
 import app.model.entities.Report;
-import app.repository.summary.ReportRepository;
+import app.repository.report.ReportRepository;
 import app.web.dto.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -60,41 +60,27 @@ public class ReportService {
 
     }
 
-    public SpendingStatisticRepost statistic(ReportRequest reportRequest) {
+    public SummaryResponse getSummary(List<TransactionDto> transactions) {
 
-        List<TransactionDto> transactions = reportRequest.getTransactions();
 
-        Map.Entry<CategoryType, BigDecimal> largest =
-                findLargestCategory(reportRequest);
+        BigDecimal incomeMonthly = calculateIncome(transactions);
 
-        String category = largest != null ? largest.getKey().name() : "NONE";
-        BigDecimal amount = largest != null ? largest.getValue() : BigDecimal.ZERO;
+        BigDecimal expenseMonthly = calculateExpenses(transactions);
 
-        BigDecimal expenses = calculateExpenses(transactions);
-        BigDecimal average = calculateAverage(reportRequest);
+        BigDecimal balanceMonthly = calculateBalance(incomeMonthly, expenseMonthly);
 
-        return SpendingStatisticRepost.builder()
-                .highestExpenseCategory(category)
-                .highestExpense(amount)
-                .averageExpense(average)
-                .totalExpenses(expenses)
+        BigDecimal savingMonthly = calculateSavingRate(balanceMonthly, incomeMonthly);
+
+
+        return SummaryResponse.builder()
+                .totalIncome(incomeMonthly)
+                .totalExpenses(expenseMonthly)
+                .currentBalance(balanceMonthly)
+                .savingRate(savingMonthly)
                 .build();
 
     }
 
-    private BigDecimal calculateAverage(ReportRequest reportRequest){
-
-        List<TransactionDto> transactions = reportRequest.getTransactions();
-
-        long count = transactions.stream().filter(t -> t.getType() == TransactionType.EXPENSE).count();
-
-        if(count == 0){
-            return BigDecimal.ZERO;
-        }
-
-        BigDecimal expenses = calculateExpenses(transactions);
-        return expenses.divide(BigDecimal.valueOf(count), RoundingMode.HALF_UP);
-    }
 
     private BigDecimal calculateSavingRate(BigDecimal balance, BigDecimal income) {
 
