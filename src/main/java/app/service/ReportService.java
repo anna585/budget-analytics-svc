@@ -73,10 +73,10 @@ public class ReportService {
 
 
         return SummaryResponse.builder()
-                .totalIncome(incomeMonthly)
-                .totalExpenses(expenseMonthly)
-                .currentBalance(balanceMonthly)
-                .savingRate(savingMonthly)
+                .monthlyIncome(incomeMonthly)
+                .monthlyExpense(expenseMonthly)
+                .monthlyBalance(balanceMonthly)
+                .monthlySavingRade(savingMonthly)
                 .build();
 
     }
