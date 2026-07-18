@@ -48,4 +48,7 @@ public class Report {
 
     @Column(nullable = false)
     private LocalDate generatedAt;
+
+    private boolean deleted;
+
 }
