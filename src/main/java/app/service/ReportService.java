@@ -52,6 +52,7 @@ public class ReportService {
                 .largestExpense(CategoryType.valueOf(largestCategory))
                 .savingRate(savingRate)
                 .generatedAt(LocalDate.now())
+                .deleted(false)
                 .build();
 
         reportRepository.save(report);
@@ -141,4 +142,21 @@ public class ReportService {
     }
 
 
+    public List<ReportResponse> getReportHistory(String userId) {
+
+        return reportRepository.findByUserId(UUID.fromString(userId))
+                .stream()
+                .filter(d -> !d.isDeleted())
+                .map(ReportMapper::toDto)
+                .toList();
+    }
+
+    public void deleteReport(String reportId) {
+
+        Report report = reportRepository.findReportById(UUID.fromString(reportId));
+
+        report.setDeleted(true);
+        System.out.println(report);
+        reportRepository.save(report);
+    }
 }
