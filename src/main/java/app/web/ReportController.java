@@ -23,7 +23,7 @@ public class ReportController {
       return reportService.postReport(reportRequest);
     }
 
-    @GetMapping("/api/v1/analystics/report-history")
+    @GetMapping("/api/v1/analytics/report-history")
     public ResponseEntity<List<ReportResponse>> getHistory(
             @RequestParam String userId) {
 
