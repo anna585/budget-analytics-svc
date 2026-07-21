@@ -37,8 +37,8 @@ public class ReportService {
 
         Map.Entry<CategoryType, BigDecimal> largest = findLargestCategory(reportRequest);
 
-        String largestCategory =
-                largest != null ? largest.getKey().name() : "NONE";
+        CategoryType largestCategory =
+                largest != null ? largest.getKey() :  CategoryType.OTHER;
 
         BigDecimal savingRate = calculateSavingRate(balance, income);
 
@@ -49,7 +49,7 @@ public class ReportService {
                 .income(income)
                 .expenses(expenses)
                 .balance(balance)
-                .largestExpense(CategoryType.valueOf(largestCategory))
+                .largestExpense(largestCategory)
                 .savingRate(savingRate)
                 .generatedAt(LocalDate.now())
                 .deleted(false)
